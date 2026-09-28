@@ -27,6 +27,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Schedule createSchedule(Schedule schedule) {
+
+        Patient patient = patientRepository.findById(
+                schedule.getPatient().getId()).orElseThrow(
+                        () -> new RuntimeException(
+                                "Patient not found with id: "
+                                        + schedule.getPatient().getId()));
+
+        Medicine medicine = medicineRepository.findById(
+                schedule.getMedicine().getId()).orElseThrow(
+                        () -> new RuntimeException(
+                                "Medicine not found with id: "
+                                        + schedule.getMedicine().getId()));
+
+        schedule.setPatient(patient);
+        schedule.setMedicine(medicine);
+
         return scheduleRepository.save(schedule);
     }
 

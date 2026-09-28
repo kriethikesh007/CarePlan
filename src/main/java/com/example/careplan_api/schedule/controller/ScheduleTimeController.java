@@ -3,8 +3,6 @@ package com.example.careplan_api.schedule.controller;
 import com.example.careplan_api.schedule.entity.ScheduleTime;
 import com.example.careplan_api.schedule.service.ScheduleTimeService;
 
-import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ public class ScheduleTimeController {
     @PostMapping("/{scheduleId}/times")
     public ResponseEntity<ScheduleTime> addScheduleTime(
             @PathVariable Long scheduleId,
-            @Valid @RequestBody ScheduleTime scheduleTime) {
+            @RequestBody ScheduleTime scheduleTime) {
 
         ScheduleTime createdScheduleTime =
                 scheduleTimeService.addScheduleTime(
