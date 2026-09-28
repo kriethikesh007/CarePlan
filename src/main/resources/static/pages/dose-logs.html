@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePlan - Dose Logs & Adherence</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/themes.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon"><i class="ri-heart-pulse-fill"></i></div>
+                    <div class="logo-text">Care<span>Plan</span></div>
+                </a>
+                <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Clinical Overview</div>
+                <a href="../index.html" class="nav-item">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-title">Care Management</div>
+                <a href="patients.html" class="nav-item">
+                    <i class="ri-user-heart-line"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="medicines.html" class="nav-item">
+                    <i class="ri-capsule-line"></i>
+                    <span>Medicines</span>
+                </a>
+                <a href="schedules.html" class="nav-item">
+                    <i class="ri-calendar-schedule-line"></i>
+                    <span>Schedules</span>
+                </a>
+                <a href="dose-logs.html" class="nav-item active">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>Dose Logs</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    <span>CarePlan API Connected</span>
+                </div>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Workspace -->
+        <div class="main-wrapper">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                        <i class="ri-menu-2-line"></i>
+                    </button>
+                    <div class="page-info">
+                        <h1 class="page-title">Medication Adherence & Dose Logs</h1>
+                        <div class="breadcrumb">
+                            <a href="../index.html"><i class="ri-home-4-line"></i> Home</a>
+                            <i class="ri-arrow-right-s-line"></i>
+                            <span>Dose Logs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-action-btn theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+                        <i class="ri-sun-line"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="ri-nurse-line"></i></div>
+                        <span class="user-name">Clinical Staff</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dose Logs Workspace Content -->
+            <main class="content-area">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);" id="doseLogsLayout">
+                    <!-- Column 1: Record New Dose Event -->
+                    <div class="glass-card">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="ri-checkbox-circle-line" style="color: var(--color-primary);"></i>
+                                Record Dose Event
+                            </h2>
+                        </div>
+                        <p style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: var(--spacing-lg);">
+                            Mark a scheduled medication dose slot as taken or missed on a specific calendar date.
+                        </p>
+
+                        <form id="recordDoseForm">
+                            <div class="form-group">
+                                <label class="form-label" for="doseScheduleSelect">Active Care Schedule <span class="required">*</span></label>
+                                <select id="doseScheduleSelect" class="form-select" required>
+                                    <option value="" disabled selected>Loading active schedules...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="doseTimeSelect">Scheduled Dose Time Slot <span class="required">*</span></label>
+                                <select id="doseTimeSelect" class="form-select" required disabled>
+                                    <option value="" disabled selected>Select a schedule first</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="doseDateInput">Calendar Date <span class="required">*</span></label>
+                                    <input type="date" id="doseDateInput" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="doseStatusSelect">Outcome / Status <span class="required">*</span></label>
+                                    <select id="doseStatusSelect" class="form-select" required>
+                                        <option value="TAKEN" selected>TAKEN (Administered)</option>
+                                        <option value="MISSED">MISSED (Omitted)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="recordDoseBtn" style="width: 100%; margin-top: var(--spacing-sm);">
+                                <i class="ri-check-double-line"></i>
+                                <span>Log Dose Event</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Column 2: Look Up & Verification -->
+                    <div style="display: flex; flex-direction: column; gap: var(--spacing-xl);">
+                        <!-- Look Up by ID -->
+                        <div class="glass-card">
+                            <div class="section-header">
+                                <h2 class="section-title">
+                                    <i class="ri-search-eye-line" style="color: var(--color-primary);"></i>
+                                    Look Up Dose Log
+                                </h2>
+                            </div>
+                            <p style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: var(--spacing-md);">
+                                Retrieve a logged dose audit entry directly from the database using its ID.
+                            </p>
+
+                            <form id="lookupForm" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+                                <input type="number" id="lookupIdInput" class="form-input" placeholder="Enter Dose Log ID (e.g. 1)" required min="1" style="flex: 1;">
+                                <button type="submit" class="btn btn-secondary" id="lookupBtn">
+                                    <i class="ri-search-line"></i> Verify
+                                </button>
+                            </form>
+
+                            <div id="lookupResultContainer">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Session Log History -->
+                        <div class="glass-card">
+                            <div class="section-header">
+                                <h2 class="section-title">
+                                    <i class="ri-history-line" style="color: var(--color-primary);"></i>
+                                    Session Recorded Doses
+                                </h2>
+                                <span class="badge badge-info" id="sessionLogCount">0 Logged</span>
+                            </div>
+
+                            <div id="sessionLogsList" style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                                <div style="text-align: center; padding: var(--spacing-lg); color: var(--text-muted); font-size: var(--font-size-xs);">
+                                    Doses recorded during this clinical session will be summarized here.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/dose-logs.js"></script>
+</body>
+</html>

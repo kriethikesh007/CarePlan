@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePlan - Medication Schedules</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remix Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/themes.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon"><i class="ri-heart-pulse-fill"></i></div>
+                    <div class="logo-text">Care<span>Plan</span></div>
+                </a>
+                <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Clinical Overview</div>
+                <a href="../index.html" class="nav-item">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-title">Care Management</div>
+                <a href="patients.html" class="nav-item">
+                    <i class="ri-user-heart-line"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="medicines.html" class="nav-item">
+                    <i class="ri-capsule-line"></i>
+                    <span>Medicines</span>
+                </a>
+                <a href="schedules.html" class="nav-item active">
+                    <i class="ri-calendar-schedule-line"></i>
+                    <span>Schedules</span>
+                </a>
+                <a href="dose-logs.html" class="nav-item">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>Dose Logs</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    <span>CarePlan API Connected</span>
+                </div>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Workspace -->
+        <div class="main-wrapper">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                        <i class="ri-menu-2-line"></i>
+                    </button>
+                    <div class="page-info">
+                        <h1 class="page-title">Care Schedules</h1>
+                        <div class="breadcrumb">
+                            <a href="../index.html"><i class="ri-home-4-line"></i> Home</a>
+                            <i class="ri-arrow-right-s-line"></i>
+                            <span>Schedules</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="header-action-btn theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+                        <i class="ri-sun-line"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar"><i class="ri-nurse-line"></i></div>
+                        <span class="user-name">Clinical Staff</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Schedules Content Area -->
+            <main class="content-area">
+                <div class="page-actions">
+                    <div class="search-bar">
+                        <i class="ri-search-2-line"></i>
+                        <input type="text" class="search-input" id="scheduleSearchInput" placeholder="Search by patient or medicine...">
+                    </div>
+                    <button class="btn btn-primary" id="openAddScheduleBtn">
+                        <i class="ri-calendar-event-line"></i>
+                        <span>Create Schedule</span>
+                    </button>
+                </div>
+
+                <!-- Loading State -->
+                <div class="page-loading" id="schedulesLoading">
+                    <div class="loading-spinner"></div>
+                    <span class="page-loading-text">Loading medication care schedules...</span>
+                </div>
+
+                <!-- Schedules Cards Grid -->
+                <div class="card-grid" id="schedulesGrid" style="display: none;">
+                    <!-- Populated dynamically via schedules.js -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="schedulesEmptyState" style="display: none;">
+                    <i class="empty-icon ri-calendar-schedule-line"></i>
+                    <h3 class="empty-title">No Schedules Created</h3>
+                    <p class="empty-text">No active medication schedules are currently registered. Assign a medicine schedule to a patient to get started.</p>
+                    <button class="btn btn-primary btn-sm" onclick="document.getElementById('openAddScheduleBtn').click()">
+                        <i class="ri-add-line"></i> Create First Schedule
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal: Create Schedule -->
+    <div class="modal-overlay" id="addScheduleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Create Medication Schedule</h3>
+                <button class="btn-icon" onclick="CarePlan.hideModal('addScheduleModal')" aria-label="Close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <form id="addScheduleForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="addSchedulePatient">Patient <span class="required">*</span></label>
+                        <select id="addSchedulePatient" class="form-select" required>
+                            <option value="" disabled selected>Select Patient</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="addScheduleMedicine">Medicine <span class="required">*</span></label>
+                        <select id="addScheduleMedicine" class="form-select" required>
+                            <option value="" disabled selected>Select Medicine</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="addScheduleDosage">Dosage (mg) <span class="required">*</span></label>
+                            <input type="number" step="0.1" id="addScheduleDosage" class="form-input" placeholder="e.g. 500" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="addScheduleFrequency">Frequency <span class="required">*</span></label>
+                            <select id="addScheduleFrequency" class="form-select" required>
+                                <option value="ONCE_DAILY">Once Daily</option>
+                                <option value="TWICE_DAILY" selected>Twice Daily</option>
+                                <option value="THREE_TIMES_DAILY">Three Times Daily</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="addScheduleStart">Start Date <span class="required">*</span></label>
+                            <input type="date" id="addScheduleStart" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="addScheduleEnd">End Date (Optional)</label>
+                            <input type="date" id="addScheduleEnd" class="form-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="CarePlan.hideModal('addScheduleModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveScheduleBtn">
+                        <i class="ri-check-line"></i> Save Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Schedule -->
+    <div class="modal-overlay" id="editScheduleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Care Schedule</h3>
+                <button class="btn-icon" onclick="CarePlan.hideModal('editScheduleModal')" aria-label="Close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <form id="editScheduleForm">
+                <input type="hidden" id="editScheduleId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="editSchedulePatient">Patient <span class="required">*</span></label>
+                        <select id="editSchedulePatient" class="form-select" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="editScheduleMedicine">Medicine <span class="required">*</span></label>
+                        <select id="editScheduleMedicine" class="form-select" required></select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editScheduleDosage">Dosage (mg) <span class="required">*</span></label>
+                            <input type="number" step="0.1" id="editScheduleDosage" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editScheduleFrequency">Frequency <span class="required">*</span></label>
+                            <select id="editScheduleFrequency" class="form-select" required>
+                                <option value="ONCE_DAILY">Once Daily</option>
+                                <option value="TWICE_DAILY">Twice Daily</option>
+                                <option value="THREE_TIMES_DAILY">Three Times Daily</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editScheduleStart">Start Date <span class="required">*</span></label>
+                            <input type="date" id="editScheduleStart" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editScheduleEnd">End Date</label>
+                            <input type="date" id="editScheduleEnd" class="form-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="CarePlan.hideModal('editScheduleModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="updateScheduleBtn">
+                        <i class="ri-check-line"></i> Update Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Schedule Detail & Schedule Times -->
+    <div class="modal-overlay" id="scheduleDetailModal">
+        <div class="modal" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Schedule Details & Dose Times</h3>
+                <button class="btn-icon" onclick="CarePlan.hideModal('scheduleDetailModal')" aria-label="Close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Overview Info -->
+                <div id="scheduleOverviewBody" style="margin-bottom: var(--spacing-xl);"></div>
+
+                <!-- Schedule Times Section -->
+                <div style="border-top: 1px solid var(--border-glass); padding-top: var(--spacing-lg);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+                        <h4 style="font-size: var(--font-size-base); color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                            <i class="ri-time-line" style="color: var(--color-primary);"></i>
+                            Specific Dose Times
+                        </h4>
+                    </div>
+
+                    <!-- Add New Time Form -->
+                    <form id="addScheduleTimeForm" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg);">
+                        <input type="time" step="1" id="newDoseTimeInput" class="form-input" style="max-width: 180px;" required>
+                        <button type="submit" class="btn btn-primary btn-sm" id="addTimeSubmitBtn">
+                            <i class="ri-add-line"></i> Add Dose Time
+                        </button>
+                    </form>
+
+                    <!-- Times List Container -->
+                    <div id="scheduleTimesListContainer">
+                        <div class="page-loading" style="padding: var(--spacing-lg);">
+                            <div class="loading-spinner loading-spinner-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="CarePlan.hideModal('scheduleDetailModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/schedule-times.js"></script>
+    <script src="../js/schedules.js"></script>
+</body>
+</html>

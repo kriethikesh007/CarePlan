@@ -1,0 +1,77 @@
+/* ===================================================
+   CarePlan Design System - Themes (Dark & Light)
+   =================================================== */
+
+/* Dark Theme (Default) */
+[data-theme="dark"] {
+    --bg-app: #08090C;
+    --bg-surface: #0E1117;
+    --bg-surface-elevated: #151A23;
+    
+    /* Glassmorphism Variables */
+    --bg-glass: rgba(18, 22, 32, 0.65);
+    --bg-glass-card: rgba(22, 27, 39, 0.55);
+    --bg-glass-hover: rgba(30, 37, 52, 0.7);
+    --bg-glass-subtle: rgba(255, 255, 255, 0.03);
+    --bg-glass-input: rgba(14, 17, 23, 0.6);
+
+    --border-glass: rgba(255, 255, 255, 0.07);
+    --border-glass-strong: rgba(255, 255, 255, 0.14);
+    --border-primary-subtle: rgba(229, 57, 53, 0.3);
+
+    --text-primary: #F3F4F6;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --text-inverse: #08090C;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --shadow-red-glow: 0 0 24px rgba(229, 57, 53, 0.25);
+    --shadow-red-card: 0 8px 30px rgba(229, 57, 53, 0.15);
+
+    --glass-blur: blur(16px);
+    --glass-blur-heavy: blur(24px);
+
+    --scrollbar-track: rgba(255, 255, 255, 0.03);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+    --scrollbar-thumb-hover: rgba(229, 57, 53, 0.4);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-app: #F5F7FB;
+    --bg-surface: #FFFFFF;
+    --bg-surface-elevated: #F9FAFB;
+
+    /* Glassmorphism Variables */
+    --bg-glass: rgba(255, 255, 255, 0.75);
+    --bg-glass-card: rgba(255, 255, 255, 0.85);
+    --bg-glass-hover: rgba(255, 255, 255, 0.95);
+    --bg-glass-subtle: rgba(0, 0, 0, 0.02);
+    --bg-glass-input: rgba(245, 247, 251, 0.85);
+
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --border-glass-strong: rgba(0, 0, 0, 0.15);
+    --border-primary-subtle: rgba(229, 57, 53, 0.25);
+
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #9CA3AF;
+    --text-inverse: #FFFFFF;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.1);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --shadow-red-glow: 0 0 24px rgba(229, 57, 53, 0.18);
+    --shadow-red-card: 0 8px 30px rgba(229, 57, 53, 0.12);
+
+    --glass-blur: blur(14px);
+    --glass-blur-heavy: blur(20px);
+
+    --scrollbar-track: rgba(0, 0, 0, 0.03);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+    --scrollbar-thumb-hover: rgba(229, 57, 53, 0.4);
+}
